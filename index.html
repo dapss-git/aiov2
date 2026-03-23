@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIO Downloader — By Dafa</title>
+
+  <!-- PWA Meta -->
+  <meta name="description" content="Download video & audio dari TikTok, Instagram, YouTube, Twitter, Facebook, SoundCloud dan banyak lagi." />
+  <meta name="theme-color" content="#e8c547" id="metaThemeColor" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="AIOdl" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="AIO Downloader — By Dafa" />
+  <meta property="og:description" content="Download video & audio dari TikTok, Instagram, YouTube & banyak lagi. Gratis, cepat, tanpa watermark." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="icons/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
+
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  GOOGLE ADSENSE — CARA PASANG:                              ║
+  ║  1. Daftar di https://adsense.google.com                    ║
+  ║  2. Tambah sitemu, tunggu approved (1–14 hari)             ║
+  ║  3. Ganti ca-pub-XXXXXXXXXXXXXXXX dgn Publisher ID kamu    ║
+  ║  4. Ganti data-ad-slot dgn Slot ID dari dashboard AdSense  ║
+  ║  5. Uncomment tag <script> AdSense di bawah ini            ║
+  ╚══════════════════════════════════════════════════════════════╝
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+     crossorigin="anonymous"></script>
+  -->
+</head>
+<body>
+
+  <canvas id="bgCanvas"></canvas>
+  <div class="noise"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <span class="logo-icon">⬇</span>
+      <span class="logo-text">AIO<em>dl</em></span>
+    </div>
+    <div class="header-right">
+      <span class="badge">v2.1 PWA</span>
+      <button class="install-btn" id="installBtn" style="display:none;" title="Install sebagai App">
+        ⊕ Install App
+      </button>
+      <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+        <span id="themeIcon">☀</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero">
+      <p class="hero-eyebrow">All-In-One Downloader</p>
+      <h1 class="hero-title">Download<br /><span class="accent">Anything.</span></h1>
+      <p class="hero-sub">TikTok · Instagram · YouTube · Twitter · Facebook · SoundCloud & more</p>
+    </section>
+
+    <!--
+    ══ IKLAN BANNER TOP ══
+    Uncomment setelah AdSense disetujui. Posisi ini = terlihat pertama kali user buka.
+    <div class="ad-slot ad-top">
+      <p class="ad-label">Iklan</p>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="1234567890"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    -->
+
+    <!-- Platform Chips -->
+    <div class="platform-chips">
+      <span class="chip active" data-plat="all">All</span>
+      <span class="chip" data-plat="tiktok">TikTok</span>
+      <span class="chip" data-plat="instagram">Instagram</span>
+      <span class="chip" data-plat="youtube">YouTube</span>
+      <span class="chip" data-plat="twitter">Twitter/X</span>
+      <span class="chip" data-plat="facebook">Facebook</span>
+      <span class="chip" data-plat="soundcloud">SoundCloud</span>
+    </div>
+
+    <!-- Input Card -->
+    <div class="input-card">
+      <div class="input-wrapper">
+        <span class="input-icon">🔗</span>
+        <input type="url" id="urlInput" placeholder="Paste URL here..." autocomplete="off" spellcheck="false" />
+        <button class="paste-btn" id="pasteBtn" title="Paste dari clipboard">📋</button>
+      </div>
+      <button class="download-btn" id="downloadBtn">
+        <span class="btn-label">Fetch Media</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+
+    <!-- Status -->
+    <div class="status-bar" id="statusBar" style="display:none;">
+      <div class="spinner"></div>
+      <span id="statusText">Fetching media info...</span>
+    </div>
+
+    <!-- Result Card -->
+    <div class="result-card" id="resultCard" style="display:none;">
+      <div class="result-meta">
+        <img id="resultThumb" src="" alt="thumbnail" />
+        <div class="result-info">
+          <span class="result-platform" id="resultPlatform"></span>
+          <p class="result-title" id="resultTitle"></p>
+          <p class="result-author" id="resultAuthor"></p>
+          <span class="result-duration" id="resultDuration"></span>
+        </div>
+      </div>
+      <div class="media-grid" id="mediaGrid"></div>
+
+      <!--
+      ══ IKLAN SETELAH HASIL ══ ← POSISI TERBAIK, user baru download, engagement tinggi!
+      <div class="ad-slot ad-result" style="margin-top:16px;">
+        <p class="ad-label">Iklan</p>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="0987654321"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+      -->
+    </div>
+
+    <!-- Error Card -->
+    <div class="error-card" id="errorCard" style="display:none;">
+      <span class="error-icon">⚠</span>
+      <p id="errorText">Terjadi kesalahan. Coba lagi.</p>
+    </div>
+
+    <!-- PWA Install Banner -->
+    <div class="pwa-banner" id="pwaBanner" style="display:none;">
+      <div class="pwa-banner-left">
+        <img src="icons/icon-72.png" alt="icon" class="pwa-icon" />
+        <div>
+          <strong>Install AIOdl sebagai App</strong>
+          <p>Akses lebih cepat, bisa dipakai offline</p>
+        </div>
+      </div>
+      <div class="pwa-banner-actions">
+        <button class="pwa-install-yes" id="pwaBannerInstall">Install</button>
+        <button class="pwa-install-no" id="pwaBannerDismiss">Nanti</button>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <section class="how-section">
+      <h2>Cara Pakai</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">01</span>
+          <p>Copy URL dari platform yang didukung</p>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <p>Paste di kolom input, klik <strong>Fetch Media</strong></p>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <p>Pilih kualitas & format, lalu download</p>
+        </div>
+      </div>
+    </section>
+
+    <!--
+    ══ IKLAN TENGAH ══
+    <div class="ad-slot ad-mid">
+      <p class="ad-label">Iklan</p>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="1122334455"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    -->
+
+    <!-- Supported -->
+    <section class="supported-section">
+      <h2>Platform Didukung</h2>
+      <div class="supported-grid">
+        <div class="sup-item"><span>🎵</span>TikTok</div>
+        <div class="sup-item"><span>📸</span>Instagram</div>
+        <div class="sup-item"><span>▶</span>YouTube</div>
+        <div class="sup-item"><span>🐦</span>Twitter/X</div>
+        <div class="sup-item"><span>📘</span>Facebook</div>
+        <div class="sup-item"><span>🎶</span>SoundCloud</div>
+        <div class="sup-item"><span>🎬</span>CapCut</div>
+        <div class="sup-item"><span>🎤</span>Spotify*</div>
+      </div>
+      <p class="note">*Audio preview only</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-brand">AIO<em>dl</em></p>
+      <p class="footer-copy">AIO By Dafa 2026 · Built with ♥ in Indonesia</p>
+      <p class="footer-tech">Powered by theresav.biz.id API</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
