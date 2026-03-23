@@ -1,0 +1,40 @@
+{
+  "name": "AIO Downloader — By Dafa",
+  "short_name": "AIOdl",
+  "description": "Download video & audio dari TikTok, Instagram, YouTube, Twitter, Facebook, SoundCloud dan banyak lagi.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#e8c547",
+  "orientation": "portrait-primary",
+  "lang": "id",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    { "src": "icons/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Download Video",
+      "short_name": "Video",
+      "description": "Langsung ke downloader video",
+      "url": "/?mode=video",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Download Audio",
+      "short_name": "Audio",
+      "description": "Langsung ke downloader audio/musik",
+      "url": "/?mode=audio",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}
